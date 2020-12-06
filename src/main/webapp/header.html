@@ -1,0 +1,97 @@
+<!--姓名提示-->
+<script src="js/getParameter.js"></script>
+<script>
+    $(function () {
+        // 查询用户信息
+        $.get("user/findOne",{},function (data) {
+            // {uid:1,name:'李四'}
+            var msg = '欢迎回来'+data.name;
+            $("#span_username").html(msg);
+        })
+
+        // 利用redis缓存  导航栏
+        // 查询数据分类    从数据库中动态获取
+        $.get("category/findAll",{},function (data) {
+            // {cid:1,name:'国内游'}
+            // 1.保留第一个 li 和 最后一个 li
+            var lis = '<li class="nav-active"><a href="index.html">首页</a></li>';
+            // 2.遍历   字符串拼接
+            for(var i = 0; i < data.length; i ++){
+                // 转发cid
+                var li = '<li><a href="route_list.html?cid='+data[i].cid+'">'+data[i].cname+'</a></li>';
+                lis += li;
+            }
+            lis +=  '<li><a href="favoriterank.html">收藏排行榜</a></li>';
+            // 将lis添加到ul的内容里面
+            $("#category").html(lis);
+        })
+        // 给搜索按钮绑定单击事件 获取搜索输入框的内容
+        $("#search-button").click(function () {
+            var rname = $("#search_input").val();
+            // 动态获取 cid 的值
+            var cid = getParameter("cid");
+            // 跳转路径 http://localhost/travel/route_list.html?cid=5
+            location.href ="http://localhost/travel/route_list.html?cid="+cid+"&rname="+rname;
+        })
+    })
+</script>
+
+<!-- 头部 start -->
+    <header id="header">
+        <div class="top_banner">
+            <img src="images/top_banner.jpg" alt="">
+        </div>
+        <div class="shortcut">
+            <!-- 未登录状态  -->
+            <div class="login_out">
+                <a href="login.html">登录</a>
+                <a href="register.html">注册</a>
+            </div>
+            <!-- 登录状态  -->
+            <div class="login">
+<!--            	用户登录成功的提示信息-->
+                <span id="span_username"></span>
+                <a href="myfavorite.html" class="collection">我的收藏</a>
+<!--                先跳转到 exitServlet -->
+                <a href="javascript:location.href='user/exit';">退出</a>
+            </div>
+        </div>
+        <div class="header_wrap">
+            <div class="topbar">
+                <div class="logo">
+                    <a href="/"><img src="images/logo.jpg" alt=""></a>
+                </div>
+                <div class="search">
+                    <input name="" type="text" placeholder="请输入路线名称" id="search_input" class="search_input" autocomplete="off">
+                    <a href="javascript:;" id="search-button" class="search-button">搜索</a>
+                </div>
+                <div class="hottel">
+
+                    <div class="hot_pic">
+                        <img src="images/hot_tel.jpg" alt="">
+                    </div>
+                    <div class="hot_tel">
+                        <p class="hot_time">客服热线(9:00-6:00)</p>
+                        <p class="hot_num">400-618-9090</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- 头部 end -->
+     <!-- 首页导航 -->
+    <div class="navitem">
+        <ul id="category" class="nav">
+            <!--<li class="nav-active"><a href="index.html">首页</a></li>
+            <li><a href="route_list.html">门票</a></li>
+            <li><a href="route_list.html">酒店</a></li>
+            <li><a href="route_list.html">香港车票</a></li>
+            <li><a href="route_list.html">出境游</a></li>
+            <li><a href="route_list.html">国内游</a></li>
+            <li><a href="route_list.html">港澳游</a></li>
+            <li><a href="route_list.html">抱团定制</a></li>
+            <li><a href="route_list.html">全球自由行</a></li>
+            <li><a href="favoriterank.html">收藏排行榜</a></li>-->
+        </ul>
+    </div>
+    
